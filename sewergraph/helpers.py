@@ -35,7 +35,7 @@ def data_from_adjacent_node(G, n, key='FACILITYID'):
         if key in d:
             return d[key]
         else:
-            print '{} not found in {}'.format(key, n)
+            print ('{} not found in {}'.format(key, n))
 
 def get_node_values(G, nodes, parameters):
     """return a list of values in nodes having the parameter"""
@@ -221,12 +221,12 @@ def create_html_map(geo_layers, filename, G, basemap='mapbox_base.html'):
                     newmap.write('edges = {};\n'.format(json.dumps(edges)))
                     newmap.write('nodes = {};\n'.format(json.dumps(nodes)))
 
-            	if 'center: [-75.148946, 39.921685],' in line:
-					newmap.write('center:[{}, {}],\n'.format(c[0], c[1]))
+                if 'center: [-75.148946, 39.921685],' in line:
+                    newmap.write('center:[{}, {}],\n'.format(c[0], c[1]))
                 if '//INSERT BBOX HERE' in line:
                     newmap.write('map.fitBounds([[{}, {}], [{}, {}]]);\n'
                                  .format(bbox[0][0], bbox[0][1], bbox[1][0],
                                          bbox[1][1]))
 
                 else:
-					newmap.write(line)
+                    newmap.write(line)

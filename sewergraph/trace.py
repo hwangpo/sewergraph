@@ -1,12 +1,12 @@
 import networkx as nx
 import pandas as pd
-from helpers import (pairwise, open_file,
-                     clean_network_data, get_node_values, round_shapefile_node_keys)
-import helpers
-from hhcalculations import philly_storm_intensity, hhcalcs_on_network
-from resolve_data import resolve_geom_gaps, resolve_slope_gaps, assign_inverts
-from kpi import SewerShedKPI
-import cost_estimates
+from .helpers import (pairwise, open_file, clean_network_data, get_node_values,
+                        round_shapefile_node_keys, write_geojson, create_html_map)
+# import helpers
+from .hhcalculations import philly_storm_intensity, hhcalcs_on_network
+from .resolve_data import resolve_geom_gaps, resolve_slope_gaps, assign_inverts
+from .kpi import SewerShedKPI
+from .cost_estimates import replacements_for_capacity
 import os
 
 class SewerGraph(object):
@@ -112,7 +112,7 @@ class SewerGraph(object):
         calculate the required replacement size of all sewers to meet the
         target_cap_frac
         """
-        cost_estimates.replacements_for_capacity(self.G, target_cap_frac)
+        replacements_for_capacity(self.G, target_cap_frac)
         df = self.conduits()
         millions = df[df.replacement_cost > 0].replacement_cost.sum() / 10**6
         return millions
@@ -166,14 +166,14 @@ class SewerGraph(object):
                          for n, d in self.G.nodes_iter(data=True)
                          if 'FACILITYID' in d]
             lyrs = dict(
-                conduits = helpers.write_geojson(self.G, inproj=inproj),
+                conduits = write_geojson(self.G, inproj=inproj),
                 phs_sheds = phs_rates
             )
-            helpers.create_html_map(lyrs, filename, self.G,'phs_sheds.html')
-            print 'phs yea'
+            create_html_map(lyrs, filename, self.G,'phs_sheds.html')
+            print ('phs yea')
         else:
-            lyrs = dict(conduits = helpers.write_geojson(self.G, inproj=inproj))
-            helpers.create_html_map(lyrs, filename, self.G)
+            lyrs = dict(conduits = write_geojson(self.G, inproj=inproj))
+            create_html_map(lyrs, filename, self.G)
 
 
         # helpers.create_html_map(lyrs, filename, self.G)
